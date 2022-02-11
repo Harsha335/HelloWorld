@@ -1,0 +1,130 @@
+import java.util.*;
+class Sudoku
+{
+    public int a[][];
+    Sudoku()
+    {
+        a=new int[9][9];
+    }
+    void input()
+    {
+        Scanner s=new Scanner(System.in);
+        for(int i=0;i<9;i++)
+        {
+            System.out.println("Enter "+(i+1)+" Row : ");
+            for(int j=0;j<9;j++)
+            {
+                a[i][j]=s.nextInt();
+            }
+        }
+    }
+    /*void input()
+    {
+        a[0][0]=5;a[0][1]=3;a[0][2]=0;a[0][3]=0;a[0][4]=7;a[0][5]=0;a[0][6]=0;a[0][7]=0;a[0][8]=0;
+        a[1][0]=6;a[1][1]=0;a[1][2]=0;a[1][3]=1;a[1][4]=9;a[1][5]=5;a[1][6]=0;a[1][7]=0;a[1][8]=0;
+        a[2][0]=0;a[2][1]=9;a[2][2]=8;a[2][3]=0;a[2][4]=0;a[2][5]=0;a[2][6]=0;a[2][7]=6;a[2][8]=0;
+        a[3][0]=8;a[3][1]=0;a[3][2]=0;a[3][3]=0;a[3][4]=6;a[3][5]=0;a[3][6]=0;a[3][7]=0;a[3][8]=3;
+        a[4][0]=4;a[4][1]=0;a[4][2]=0;a[4][3]=8;a[4][4]=0;a[4][5]=3;a[4][6]=0;a[4][7]=0;a[4][8]=1;
+        a[5][0]=7;a[5][1]=0;a[5][2]=0;a[5][3]=0;a[5][4]=2;a[5][5]=0;a[5][6]=0;a[5][7]=0;a[5][8]=6;
+        a[6][0]=0;a[6][1]=6;a[6][2]=0;a[6][3]=0;a[6][4]=0;a[6][5]=0;a[6][6]=2;a[6][7]=8;a[6][8]=0;
+        a[7][0]=0;a[7][1]=0;a[7][2]=0;a[7][3]=4;a[7][4]=1;a[7][5]=9;a[7][6]=0;a[7][7]=0;a[7][8]=5;
+        a[8][0]=0;a[8][1]=0;a[8][2]=0;a[8][3]=0;a[8][4]=8;a[8][5]=0;a[8][6]=0;a[8][7]=7;a[8][8]=9;
+    }*/
+    boolean solve()
+    {
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                if(a[i][j]==0)
+                {
+                    for(int num=1;num<=9;num++)
+                    {
+                        if(isOk(num,i,j))
+                        {
+                            a[i][j]=num;
+                            if(solve())
+                                return true;
+                            else
+                                a[i][j]=0;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    boolean isNumInRow(int num,int row)
+    {
+        for(int i=0;i<9;i++)
+        {
+            if(num==a[row][i])
+                return true;
+        }
+        return false;
+    }
+    boolean isNumInColumn(int num,int column)
+    {
+        for(int i=0;i<9;i++)
+        {
+            if(num==a[i][column])
+                return true;
+        }
+        return false;
+    }
+    boolean isNumInBox(int num,int row,int column)
+    {
+        int localRow=row-row%3;
+        int localColumn=column-column%3;
+        for(int i=localRow;i<localRow+3;i++)
+        {
+            for(int j=localColumn;j<localColumn+3;j++)
+            {
+                if(a[i][j]==num)
+                    return true;
+            }
+        }
+        return false;
+    }
+    boolean isOk(int num,int row,int column)
+    {
+        return (!isNumInRow(num,row)&&!isNumInColumn(num,column)&&!isNumInBox(num,row,column));
+    }
+    void print()
+    {
+        for (int i=0;i<9;i++)
+        {
+            if(i%3==0&&i!=0)
+            {
+                System.out.println("- - - - - - - - - - - -");
+            }
+            for(int j=0;j<9;j++)
+            {
+                if(j%3==0&&j!=0)
+                {
+                    System.out.print(" | ");
+                }
+                System.out.print(a[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+    }
+    public static void main(String args[])
+    {
+        //System.out.println("Enter elementes by row wise : ");
+        Sudoku obj=new Sudoku();
+        System.out.println("Entered elementes : ");
+        obj.input();
+        obj.print();
+        if(obj.solve())
+        {
+            System.out.println("\nSuccessful!!!! :)\n");
+            obj.print();
+        }
+        else
+        {
+            System.out.println("Sorry :(");
+        }
+    }
+}
